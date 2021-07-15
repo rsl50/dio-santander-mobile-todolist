@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">TO DO</string>
+    <string name="lable_new_task">Criar Tarefa</string>
+    <string name="label_hint_title">Título</string>
+    <string name="label_hint_description">Descrição</string>
+    <string name="label_hint_date">Data</string>
+    <string name="label_hint_hour">Hora</string>
+    <string name="label_cancel">Cancelar</string>
+    <string name="label_tasks">Tarefas</string>
 </resources>

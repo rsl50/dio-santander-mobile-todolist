@@ -10,7 +10,7 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tarefas"
+        android:text="@string/label_tasks"
         android:layout_margin="16dp"
         android:textColor="@color/black"
         android:textSize="24sp"
