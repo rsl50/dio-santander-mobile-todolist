@@ -71,6 +71,7 @@ class AddTaskActivity : AppCompatActivity() {
             // Inserting the task in the data source list
             TaskDataSource.insertTask(task)
             Log.e("TAG", "insertListeners: " + TaskDataSource.getList())
+            finish()
         }
     }
 }
