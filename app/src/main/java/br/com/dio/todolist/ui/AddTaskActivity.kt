@@ -1,5 +1,6 @@
 package br.com.dio.todolist.ui
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -71,6 +72,9 @@ class AddTaskActivity : AppCompatActivity() {
             // Inserting the task in the data source list
             TaskDataSource.insertTask(task)
             Log.e("TAG", "insertListeners: " + TaskDataSource.getList())
+
+            // Set the Activity result as OK to the caller Activity
+            setResult(Activity.RESULT_OK)
             finish()
         }
     }
