@@ -2,9 +2,11 @@ package br.com.dio.todolist.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import br.com.dio.todolist.R
 import br.com.dio.todolist.databinding.ActivityMainBinding
@@ -59,7 +61,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateList() {
-        adapter.submitList(TaskDataSource.getList())
+        val list = TaskDataSource.getList()
+        binding.includeEmpty.emptyState.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+        adapter.submitList(list)
     }
 
     companion object {

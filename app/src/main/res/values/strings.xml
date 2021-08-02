@@ -10,4 +10,6 @@
     <string name="label_description_new_task">Nova tarefa</string>
     <string name="label_edit">Editar</string>
     <string name="label_delete">Deletar</string>
+  <string name="task_not_created">Task não criada</string>
+  <string name="label_no_tasks_found">Ops! Você não possui\nnenhuma tarefa</string>
 </resources>
