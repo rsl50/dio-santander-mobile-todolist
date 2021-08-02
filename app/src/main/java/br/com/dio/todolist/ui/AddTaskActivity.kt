@@ -25,6 +25,16 @@ class AddTaskActivity : AppCompatActivity() {
         binding = ActivityAddTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (intent.hasExtra(TASK_ID)) {
+            val taskId = intent.getIntExtra(TASK_ID, 0)
+            TaskDataSource.findById(taskId)?.let {
+                binding.tilTitle.text = it.title
+                binding.tilDescription.text = it.description
+                binding.tilDate.text = it.date
+                binding.tilHour.text = it.hour
+            }
+        }
+
         insertListeners()
     }
 
@@ -60,22 +70,36 @@ class AddTaskActivity : AppCompatActivity() {
             timePicker.show(supportFragmentManager, null)
         }
 
-        binding.btnCancelTask.setOnClickListener { finish() }
+        binding.btnCancelTask.setOnClickListener {
+            setResult(Activity.RESULT_OK)
+            finish()
+        }
 
         binding.btnNewTask.setOnClickListener {
             // Creating a Task
             val task = Task(
                     title = binding.tilTitle.text,
+                    description = binding.tilDescription.text,
                     date = binding.tilDate.text,
-                    hour = binding.tilHour.text
+                    hour = binding.tilHour.text,
+                    id = intent.getIntExtra(TASK_ID, 0)
             )
             // Inserting the task in the data source list
-            TaskDataSource.insertTask(task)
-            Log.e("TAG", "insertListeners: " + TaskDataSource.getList())
+            if (task.title != null && task.title.isNotEmpty()) {
+                TaskDataSource.insertTask(task)
+                Log.e("TODO", "insertListeners: " + TaskDataSource.getList())
 
-            // Set the Activity result as OK to the caller Activity
-            setResult(Activity.RESULT_OK)
+                // Set the Activity result as OK to the caller Activity
+                setResult(Activity.RESULT_OK)
+            } else {
+                setResult(Activity.RESULT_CANCELED)
+            }
+
             finish()
         }
+    }
+
+    companion object {
+        const val TASK_ID = "task_id"
     }
 }

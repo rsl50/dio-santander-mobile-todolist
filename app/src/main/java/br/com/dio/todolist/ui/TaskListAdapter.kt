@@ -1,5 +1,6 @@
 package br.com.dio.todolist.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -58,6 +59,9 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(DiffCa
 }
 
 class DiffCallback : DiffUtil.ItemCallback<Task>() {
-    override fun areItemsTheSame(oldItem: Task, newItem: Task) = oldItem == newItem
-    override fun areContentsTheSame(oldItem: Task, newItem: Task) = oldItem.id == newItem.id
+    override fun areItemsTheSame(oldItem: Task, newItem: Task) = oldItem?.id == newItem?.id
+
+    override fun areContentsTheSame(oldItem: Task, newItem: Task) = (oldItem.title == newItem.title)
+            && (oldItem.description == newItem.description) && (oldItem.date == newItem.date)
+            && (oldItem.hour == newItem.hour)
 }
