@@ -2,13 +2,14 @@ package br.com.dio.todolist.ui
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import br.com.dio.todolist.dao.TaskDAO
+import br.com.dio.todolist.database.AppDatabase
 import br.com.dio.todolist.databinding.ActivityAddTaskBinding
-import br.com.dio.todolist.datasource.TaskDataSource
 import br.com.dio.todolist.extensions.format
 import br.com.dio.todolist.extensions.text
 import br.com.dio.todolist.model.Task
+import br.com.dio.todolist.util.ResultCode
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -17,6 +18,7 @@ import java.util.*
 class AddTaskActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddTaskBinding
+    private lateinit var taskDao: TaskDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +27,14 @@ class AddTaskActivity : AppCompatActivity() {
         binding = ActivityAddTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Get database instance
+        taskDao = AppDatabase.getInstance(this).getTaskDAO()
+
         if (intent.hasExtra(TASK_ID)) {
+            // Capture task id from intent
             val taskId = intent.getIntExtra(TASK_ID, 0)
-            TaskDataSource.findById(taskId)?.let {
+            // Bind task data from intent
+            taskDao.get(taskId).let {
                 binding.tilTitle.text = it.title
                 binding.tilDescription.text = it.description
                 binding.tilDate.text = it.date
@@ -84,17 +91,25 @@ class AddTaskActivity : AppCompatActivity() {
                     hour = binding.tilHour.text,
                     id = intent.getIntExtra(TASK_ID, 0)
             )
-            // Inserting the task in the data source list
+            // Inserting the task in the database
             if (task.title != null && task.title.isNotEmpty()) {
-                TaskDataSource.insertTask(task)
-                Log.e("TODO", "insertListeners: " + TaskDataSource.getList())
 
-                // Set the Activity result as OK to the caller Activity
-                setResult(Activity.RESULT_OK)
+                if (task.id == 0) {
+                    taskDao.add(task)
+                    setResult(ResultCode.ADD_OK.value)
+                } else {
+                    taskDao.edit(task)
+                    setResult(ResultCode.EDIT_OK.value)
+                }
             } else {
-                setResult(Activity.RESULT_CANCELED)
+                setResult(ResultCode.CANCELED.value)
             }
 
+            finish()
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
+            setResult(ResultCode.CANCELED.value)
             finish()
         }
     }

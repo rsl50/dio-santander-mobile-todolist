@@ -1,32 +1,41 @@
 package br.com.dio.todolist.ui
 
-import android.app.Activity
 import android.content.Intent
-import android.opengl.Visibility
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import br.com.dio.todolist.R
+import br.com.dio.todolist.dao.TaskDAO
+import br.com.dio.todolist.database.AppDatabase
 import br.com.dio.todolist.databinding.ActivityMainBinding
-import br.com.dio.todolist.datasource.TaskDataSource
+import br.com.dio.todolist.util.ResultCode
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    // Lazy indicates the initialization will only happen when the adapter is called
-    private val adapter by lazy { TaskListAdapter() }
+    private lateinit var adapter: TaskListAdapter
+    private lateinit var taskDao: TaskDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Get database instance
+        taskDao = AppDatabase.getInstance(this).getTaskDAO()
+
+        adapter = TaskListAdapter(taskDao.all().toMutableList())
         binding.rvTasks.adapter = adapter
         updateList()
 
         insertListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter.replaceAllTasks(taskDao.all())
     }
 
     private fun insertListeners() {
@@ -42,7 +51,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         adapter.listenerDelete = {
-            TaskDataSource.deleteTask(it)
+            taskDao.remove(it)
+            Toast.makeText(this, "Tarefa Removida", Toast.LENGTH_SHORT).show()
             updateList()
         }
     }
@@ -51,22 +61,34 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         // Update recyclerView with list of tasks
-        if (requestCode == CREATE_NEW_TASK && resultCode == Activity.RESULT_OK) {
-            Log.e("TODO", "Task Criada/Atualizada")
-            updateList()
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            Log.e("TODO", "Task não Criada/Atualizada")
-            Toast.makeText(this, getString(R.string.task_not_created), Toast.LENGTH_SHORT).show()
+        if (requestCode == CREATE_NEW_TASK) {
+            when (resultCode) {
+                ResultCode.ADD_OK.value -> {
+                    Log.e(LOG_TAG, "Tarefa Criada")
+                    Toast.makeText(this, "Tarefa Criada", Toast.LENGTH_SHORT).show()
+                    updateList()
+                }
+                ResultCode.EDIT_OK.value -> {
+                    Log.e(LOG_TAG, "Tarefa Atualizada")
+                    Toast.makeText(this, "Tarefa Atualizada", Toast.LENGTH_SHORT).show()
+                    updateList()
+                }
+                ResultCode.CANCELED.value -> {
+                    Log.e(LOG_TAG, "Tarefa não Criada")
+                    Toast.makeText(this, getString(R.string.task_not_created), Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
     private fun updateList() {
-        val list = TaskDataSource.getList()
+        val list = taskDao.all()//TaskDataSource.getList()
         binding.includeEmpty.emptyState.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
-        adapter.submitList(list)
+        adapter.replaceAllTasks(list)
     }
 
     companion object {
         private const val CREATE_NEW_TASK = 1000
+        private const val LOG_TAG = "TODO"
     }
 }

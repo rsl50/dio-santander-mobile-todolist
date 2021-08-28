@@ -1,17 +1,15 @@
 package br.com.dio.todolist.ui
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import br.com.dio.todolist.R
 import br.com.dio.todolist.databinding.ItemTaskBinding
 import br.com.dio.todolist.model.Task
 
-class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(DiffCallback()) {
+class TaskListAdapter(private val tasks: MutableList<Task> = mutableListOf()) :
+    RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
 
     // Empty functions for the popup menu lambdas
     var listenerEdit : (Task) -> Unit = {}
@@ -25,8 +23,24 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(DiffCa
         return TaskViewHolder(binding)
     }
 
+    override fun getItemCount(): Int {
+        return tasks.size
+    }
+
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val task = tasks[position]
+        holder.bind(task)
+    }
+
+    fun add(tasks: List<Task>) {
+        this.tasks.addAll(tasks)
+        notifyItemRangeInserted(0, tasks.size)
+    }
+
+    fun replaceAllTasks(tasks: List<Task>) {
+        this.tasks.clear()
+        this.tasks.addAll(tasks)
+        notifyDataSetChanged()
     }
 
     // In order to be able to access the lambdas we need to set it as inner class
@@ -56,12 +70,4 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(DiffCa
             popupMenu.show()
         }
     }
-}
-
-class DiffCallback : DiffUtil.ItemCallback<Task>() {
-    override fun areItemsTheSame(oldItem: Task, newItem: Task) = oldItem?.id == newItem?.id
-
-    override fun areContentsTheSame(oldItem: Task, newItem: Task) = (oldItem.title == newItem.title)
-            && (oldItem.description == newItem.description) && (oldItem.date == newItem.date)
-            && (oldItem.hour == newItem.hour)
 }

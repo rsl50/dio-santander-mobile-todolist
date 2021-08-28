@@ -1,11 +1,16 @@
 package br.com.dio.todolist.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 data class Task(
+        @PrimaryKey(autoGenerate = true)
+        val id: Int = 0,
         val title: String,
         val description: String,
         val hour: String,
-        val date: String,
-        val id: Int = 0
+        val date: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
