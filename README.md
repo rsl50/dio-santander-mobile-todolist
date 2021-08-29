@@ -63,7 +63,7 @@ ToDO is project developed during the Santander Bootcamp Mobile, developed in Kot
 
 ## :memo: License
 
-This project is under MIT License. Check the file [LICENSE](dio-santander-mobile-todolist/blob/master/LICENSE) for more details.
+This project is under MIT License. Check the file [LICENSE](LICENSE) for more details.
 
 ---
 
