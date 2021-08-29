@@ -1,9 +1,10 @@
 <h1 align="center">
+    <img alt="dioLogo" title="#ToDO" src=".github\dio_cover.jpg" width="200px" />
     <img alt="bootcampLogo" title="#ToDO" src=".github\dio_santander_logo.png" width="200px" />
 </h1>
 
-<h4 align="center"> 
-  Santander Bootcamp Mobile
+<h4 align="center">  
+  <a href="https://web.digitalinnovation.one/track/santander-mobile-developer">Digital Innovation One - Santander Bootcamp Mobile</a>
 </h4>
 
 <p align="center">
