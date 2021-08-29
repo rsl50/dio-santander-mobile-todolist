@@ -4,7 +4,7 @@
 </h1>
 
 <h4 align="center">  
-  <a href="https://web.digitalinnovation.one/track/santander-mobile-developer">Digital Innovation One - Santander Bootcamp Mobile</a>
+  <a href="https://web.digitalinnovation.one/track/santander-mobile-developer">Digital Innovation One - Santander Bootcamp Mobile Developer</a>
 </h4>
 
 <p align="center">
@@ -63,8 +63,8 @@ ToDO is project developed during the Santander Bootcamp Mobile, developed in Kot
 
 ## :memo: License
 
-This project is under MIT License. Check the file [LICENSE](LICENSE.md) for more details.
+This project is under MIT License. Check the file [LICENSE](dio-santander-mobile-todolist/blob/master/LICENSE) for more details.
 
 ---
 
-Developed with :sparkling_heart: and ☕ by Robson Lima for Digital Innovation One - Santander Mobile Bootcamp
+Developed with :sparkling_heart: and ☕ by Robson Lima for Digital Innovation One - Santander Bootcamp Mobile Developer
